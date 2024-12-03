@@ -62,6 +62,9 @@ class ControllerInstance extends InstanceBase<ModuleConfig> {
 		reaperConfig.remoteAddress = config.host
 		reaperConfig.remotePort = config.port
 
+		reaperConfig.numberOfTracks = 12
+		// config.numTrackVariables
+
 		reaperConfig.afterMessageReceived = (message, handled) => {
 			this.handleCustomMessages(message, handled)
 		}

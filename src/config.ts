@@ -5,6 +5,7 @@ export interface ModuleConfig {
 	port: number
 	feedbackPort: number
 	refreshOnInit: boolean
+	numTrackVariables: number
 }
 
 export function GetConfigFields(): SomeCompanionConfigField[] {
@@ -43,6 +44,16 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			min: 1,
 			max: 65535,
 			default: 9000,
+		},
+		{
+			type: 'number',
+			id: 'numTrackVariables',
+			label: 'Number of Track Variables',
+			width: 3,
+			tooltip: 'Number of Tracks to watch in the Variables Section',
+			min: 1,
+			max: 256,
+			default: 10,
 		},
 		{
 			type: 'checkbox',
