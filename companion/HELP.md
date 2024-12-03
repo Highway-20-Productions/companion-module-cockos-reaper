@@ -1,6 +1,6 @@
 ## Cockos Reaper
 
-This module connects to the HWY20 Cockos Reaper software.
+This module connects to the Cockos Reaper software.
 
 ### Configuration
 

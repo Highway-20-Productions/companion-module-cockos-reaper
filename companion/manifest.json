@@ -1,8 +1,8 @@
 {
-	"id": "hwy20-cockos-reaper",
-	"name": "hwy20-cockos-reaper",
-	"shortname": "hwy20-reaper",
-	"description": "HWY20 Cockos REAPER module for Companion",
+	"id": "cockos-reaper",
+	"name": "cockos-reaper",
+	"shortname": "reaper",
+	"description": "Cockos REAPER module for Companion",
 	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-cockos-reaper.git",
@@ -25,6 +25,6 @@
 		"entrypoint": "../dist/index.js"
 	},
 	"manufacturer": "Cockos",
-	"products": ["HWY20REAPER"],
+	"products": ["REAPER"],
 	"keywords": ["Audio", "Recording"]
 }
