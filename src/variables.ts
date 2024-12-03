@@ -13,15 +13,15 @@ export type ReaperPropertyVariableDefinition = {
 	valueConverter?: (value: any) => any
 } & CompanionVariableDefinition
 
-export function GetVariableDefinitions(): ReaperPropertyVariableDefinition[] {
+export function GetVariableDefinitions(numTrackVariables: number): ReaperPropertyVariableDefinition[] {
 	const variables: ReaperPropertyVariableDefinition[] = []
 
-	variables.push(...LegacyVariableDefinitions())
+	variables.push(...LegacyVariableDefinitions(numTrackVariables))
 
 	return variables
 }
 
-function LegacyVariableDefinitions(): ReaperPropertyVariableDefinition[] {
+function LegacyVariableDefinitions(numTrackVariables: number): ReaperPropertyVariableDefinition[] {
 	const variables: ReaperPropertyVariableDefinition[] = [
 		{
 			...LegacyTransportVariable('playStatus', 'Play Status', 'isPlaying'),
@@ -69,12 +69,14 @@ function LegacyVariableDefinitions(): ReaperPropertyVariableDefinition[] {
 				const minutes = Math.floor((value / 60) % 60)
 				const seconds = value % 60
 				// build up time string in h:mm:ss.mmm format with optional hours section
-				return `${hours > 0 ? hours + ':' + minutes.toString().padStart(2, '0') : minutes}:${seconds.toFixed(3).padStart(6, '0')}`
+				return `${hours > 0 ? hours + ':' + minutes.toString().padStart(2, '0') : minutes}:${seconds
+					.toFixed(3)
+					.padStart(6, '0')}`
 			},
 		},
 	]
 
-	for (let i = 0; i < 8; i++) {
+	for (let i = 0; i < numTrackVariables; i++) {
 		const trackVariables = LegacyTrackVariables(i)
 
 		variables.push(...trackVariables)
@@ -107,6 +109,14 @@ function LegacyTrackVariables(trackIndex: number): ReaperPropertyVariableDefinit
 		{
 			...LegacyTrackVariable(trackIndex, 'Monitor', 'Monitoring', 'recordMonitoring'),
 			valueConverter: (value) => (value ? 'Monitoring' : 'Not Monitoring'),
+		},
+		{
+			...LegacyTrackVariable(trackIndex, 'vu', 'VU', 'vu'),
+			valueConverter: (value) => value,
+		},
+		{
+			...LegacyTrackVariable(trackIndex, 'volume', 'Volume', 'volumeDb'),
+			valueConverter: (value) => value,
 		},
 	]
 

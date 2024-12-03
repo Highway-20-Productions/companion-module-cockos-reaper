@@ -19,6 +19,7 @@ class ControllerInstance extends InstanceBase<ModuleConfig> {
 	private _unsubscribeVariables: Unsubscribe[] = []
 	private _feedbackBindings: FeedbackBindings = {}
 	private _customMessageFeedbacks: CustomMessageFeedbacks = {}
+	private _numTrackVariables = 8
 
 	constructor(internal: unknown) {
 		super(internal)
@@ -62,7 +63,9 @@ class ControllerInstance extends InstanceBase<ModuleConfig> {
 		reaperConfig.remoteAddress = config.host
 		reaperConfig.remotePort = config.port
 
-		reaperConfig.numberOfTracks = 12
+		reaperConfig.numberOfTracks = config.numTrackVariables
+		this._numTrackVariables = config.numTrackVariables
+
 		// config.numTrackVariables
 
 		reaperConfig.afterMessageReceived = (message, handled) => {
@@ -138,7 +141,7 @@ class ControllerInstance extends InstanceBase<ModuleConfig> {
 	}
 
 	private bindVariables(): void {
-		const variables = GetVariableDefinitions()
+		const variables = GetVariableDefinitions(this._numTrackVariables)
 
 		const unsubscribes: Unsubscribe[] = []
 
