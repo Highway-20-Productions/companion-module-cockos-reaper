@@ -6,6 +6,7 @@ export interface ModuleConfig {
 	feedbackPort: number
 	refreshOnInit: boolean
 	numTrackVariables: number
+	numFXVariables: number
 }
 
 export function GetConfigFields(): SomeCompanionConfigField[] {
@@ -54,6 +55,16 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			min: 1,
 			max: 256,
 			default: 10,
+		},
+		{
+			type: 'number',
+			id: 'numFXVariables',
+			label: 'Number of FX Variables',
+			width: 3,
+			tooltip: 'Number of FX to watch in the Variables Section',
+			min: 1,
+			max: 256,
+			default: 2,
 		},
 		{
 			type: 'checkbox',

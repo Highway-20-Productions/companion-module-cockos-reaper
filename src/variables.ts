@@ -13,15 +13,21 @@ export type ReaperPropertyVariableDefinition = {
 	valueConverter?: (value: any) => any
 } & CompanionVariableDefinition
 
-export function GetVariableDefinitions(numTrackVariables: number): ReaperPropertyVariableDefinition[] {
+export function GetVariableDefinitions(
+	numTrackVariables: number,
+	numFXVariables: number
+): ReaperPropertyVariableDefinition[] {
 	const variables: ReaperPropertyVariableDefinition[] = []
 
-	variables.push(...LegacyVariableDefinitions(numTrackVariables))
+	variables.push(...LegacyVariableDefinitions(numTrackVariables, numFXVariables))
 
 	return variables
 }
 
-function LegacyVariableDefinitions(numTrackVariables: number): ReaperPropertyVariableDefinition[] {
+function LegacyVariableDefinitions(
+	numTrackVariables: number,
+	numFXVariables: number
+): ReaperPropertyVariableDefinition[] {
 	const variables: ReaperPropertyVariableDefinition[] = [
 		{
 			...LegacyTransportVariable('playStatus', 'Play Status', 'isPlaying'),
@@ -77,7 +83,7 @@ function LegacyVariableDefinitions(numTrackVariables: number): ReaperPropertyVar
 	]
 
 	for (let i = 0; i < numTrackVariables; i++) {
-		const trackVariables = LegacyTrackVariables(i)
+		const trackVariables = LegacyTrackVariables(numFXVariables, i)
 
 		variables.push(...trackVariables)
 	}
@@ -85,7 +91,22 @@ function LegacyVariableDefinitions(numTrackVariables: number): ReaperPropertyVar
 	return variables
 }
 
-function LegacyTrackVariables(trackIndex: number): ReaperPropertyVariableDefinition[] {
+function vuToDb(vu: number): number {
+	if (vu <= 0) {
+		return -60 // Silence at 0
+	}
+
+	// Power factor for spacing control
+	const p = 1 // Adjust this if needed for steeper/slower curves
+
+	// Custom non-linear formula for equally spaced dB values
+	const db = 12 + -72 * (1 - Math.pow(vu, p))
+
+	// Round to one decimal place
+	return Math.round(db * 10) / 10
+}
+
+function LegacyTrackVariables(numFXVariables: number, trackIndex: number): ReaperPropertyVariableDefinition[] {
 	const variables: ReaperPropertyVariableDefinition[] = [
 		{
 			...LegacyTrackVariable(trackIndex, 'Mute', 'Muted', 'isMuted'),
@@ -112,15 +133,19 @@ function LegacyTrackVariables(trackIndex: number): ReaperPropertyVariableDefinit
 		},
 		{
 			...LegacyTrackVariable(trackIndex, 'vu', 'VU', 'vu'),
-			valueConverter: (value) => value,
+			valueConverter: (value) => Math.round(value * 1000) / 10,
 		},
 		{
-			...LegacyTrackVariable(trackIndex, 'volume', 'Volume', 'volumeDb'),
-			valueConverter: (value) => value,
+			...LegacyTrackVariable(trackIndex, 'vu_db', 'VU db', 'vu'),
+			valueConverter: (value) => vuToDb(value),
+		},
+		{
+			...LegacyTrackVariable(trackIndex, 'volume_db', 'Volume db', 'volumeDb'),
+			valueConverter: (value) => Math.round(value * 10) / 10,
 		},
 	]
 
-	for (let i = 0; i < 8; i++) {
+	for (let i = 0; i < numFXVariables; i++) {
 		const fxVariables = LegacyTrackFxVariables(trackIndex, i)
 
 		variables.push(...fxVariables)

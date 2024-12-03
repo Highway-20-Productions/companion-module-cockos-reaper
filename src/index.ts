@@ -20,6 +20,7 @@ class ControllerInstance extends InstanceBase<ModuleConfig> {
 	private _feedbackBindings: FeedbackBindings = {}
 	private _customMessageFeedbacks: CustomMessageFeedbacks = {}
 	private _numTrackVariables = 8
+	private _numFXVariables = 8
 
 	constructor(internal: unknown) {
 		super(internal)
@@ -65,6 +66,9 @@ class ControllerInstance extends InstanceBase<ModuleConfig> {
 
 		reaperConfig.numberOfTracks = config.numTrackVariables
 		this._numTrackVariables = config.numTrackVariables
+
+		reaperConfig.numberOfFx = config.numFXVariables
+		this._numFXVariables = config.numFXVariables
 
 		// config.numTrackVariables
 
@@ -141,7 +145,7 @@ class ControllerInstance extends InstanceBase<ModuleConfig> {
 	}
 
 	private bindVariables(): void {
-		const variables = GetVariableDefinitions(this._numTrackVariables)
+		const variables = GetVariableDefinitions(this._numTrackVariables, this._numFXVariables)
 
 		const unsubscribes: Unsubscribe[] = []
 
